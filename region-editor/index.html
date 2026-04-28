@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RMCS Region Editor</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <h1>Region Editor</h1>
+      <p class="hint">
+        Manual region workflow for rmcs-navigation. Load a map PNG, click polygon vertices, and
+        export region JSON / PNG / Lua without automatic segmentation.
+      </p>
+
+      <section class="panel">
+        <h2>Map Files</h2>
+        <label class="field">
+          <span>Map PNG</span>
+          <input id="map-image-input" type="file" accept=".png,image/png">
+        </label>
+        <label class="field">
+          <span>Map YAML</span>
+          <input id="map-yaml-input" type="file" accept=".yaml,.yml,text/yaml,.txt">
+        </label>
+        <label class="field">
+          <span>Region JSON</span>
+          <input id="region-json-input" type="file" accept=".json,application/json">
+        </label>
+      </section>
+
+      <section class="panel">
+        <h2>Map Metadata</h2>
+        <label class="field">
+          <span>Map Name</span>
+          <input id="map-name-input" type="text" placeholder="rmul">
+        </label>
+        <div class="field compact">
+          <span>Image Size</span>
+          <div id="map-size-label" class="readonly">not loaded</div>
+        </div>
+        <label class="field">
+          <span>Resolution</span>
+          <input id="resolution-input" type="number" step="0.0001" value="0.05">
+        </label>
+        <label class="field">
+          <span>Origin X</span>
+          <input id="origin-x-input" type="number" step="0.0001" value="0">
+        </label>
+        <label class="field">
+          <span>Origin Y</span>
+          <input id="origin-y-input" type="number" step="0.0001" value="0">
+        </label>
+      </section>
+
+      <section class="panel">
+        <h2>Regions</h2>
+        <div class="field">
+          <span>New Region Name</span>
+          <input id="new-region-name-input" type="text">
+        </div>
+        <label class="field">
+          <span>New Region Color</span>
+          <input id="new-region-color-input" type="color" value="#ff0000">
+        </label>
+        <button id="add-region-button" type="button">Add Region</button>
+        <div class="tool-mode" role="group" aria-label="Region tool mode">
+          <button id="polygon-tool-button" type="button" class="active">框选</button>
+          <button id="fill-tool-button" type="button">填充</button>
+        </div>
+        <div id="region-list" class="list"></div>
+
+        <div class="subpanel">
+          <h3>Selected Region</h3>
+          <div id="selected-region-label" class="readonly">none</div>
+          <label class="field">
+            <span>Name</span>
+            <input id="selected-region-name-input" type="text">
+          </label>
+          <label class="field">
+            <span>Color</span>
+            <input id="selected-region-color-input" type="color">
+          </label>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Polygon Tools</h2>
+        <div class="toolbar">
+          <button id="finish-polygon-button" type="button">Finish Polygon</button>
+          <button id="cancel-polygon-button" type="button">Cancel Polygon</button>
+        </div>
+        <p class="hint">
+          Left click to add vertices. Double click or use "Finish Polygon" to close. Right click
+          removes the last pending vertex.
+        </p>
+        <div class="readonly">Pending vertices: <span id="pending-points-label">0</span></div>
+        <div id="polygon-list" class="list"></div>
+      </section>
+
+      <section class="panel">
+        <h2>View</h2>
+        <label class="field">
+          <span>Zoom</span>
+          <input id="zoom-range" type="range" min="1" max="16" step="1" value="4">
+        </label>
+        <div class="readonly">Zoom: <span id="zoom-label">4x</span></div>
+        <label class="field">
+          <span>Overlay Opacity</span>
+          <input id="overlay-range" type="range" min="0" max="100" step="1" value="55">
+        </label>
+        <div class="readonly">Opacity: <span id="overlay-label">55%</span></div>
+        <div class="readonly">Pointer: <span id="pointer-label">-</span></div>
+      </section>
+
+      <section class="panel">
+        <h2>Export</h2>
+        <div class="toolbar export-toolbar">
+          <button id="export-json-button" type="button">Download JSON</button>
+          <button id="export-png-button" type="button">Download PNG</button>
+          <button id="export-lua-button" type="button">Download Lua</button>
+        </div>
+      </section>
+
+      <div id="status" class="status">Load a map PNG to begin.</div>
+    </aside>
+
+    <main class="workspace">
+      <div class="canvas-wrap">
+        <canvas id="editor-canvas"></canvas>
+      </div>
+    </main>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>
