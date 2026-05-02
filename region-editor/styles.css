@@ -172,6 +172,12 @@ button.danger {
 
 .workspace {
   flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.canvas-scroll {
+  height: 100%;
   overflow: auto;
   padding: 16px;
 }
@@ -190,6 +196,24 @@ button.danger {
   image-rendering: pixelated;
   image-rendering: crisp-edges;
   cursor: crosshair;
+}
+
+.coordinate-overlay {
+  position: absolute;
+  left: 28px;
+  bottom: 16px;
+  z-index: 1;
+  min-width: 120px;
+  padding: 6px 10px;
+  border: 1px solid rgba(15, 23, 42, 0.35);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.88);
+  color: #111827;
+  font-size: 13px;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.12);
 }
 
 .status {

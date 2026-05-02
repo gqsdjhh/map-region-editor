@@ -66,6 +66,7 @@
     overlayRange: document.getElementById("overlay-range"),
     overlayLabel: document.getElementById("overlay-label"),
     pointerLabel: document.getElementById("pointer-label"),
+    mapCoordinateLabel: document.getElementById("map-coordinate-label"),
     finishPolygonButton: document.getElementById("finish-polygon-button"),
     cancelPolygonButton: document.getElementById("cancel-polygon-button"),
     exportJsonButton: document.getElementById("export-json-button"),
@@ -787,6 +788,7 @@
     elements.zoomLabel.textContent = `${state.zoom}x`;
     elements.overlayLabel.textContent = `${Math.round(state.overlayOpacity * 100)}%`;
     elements.pointerLabel.textContent = formatPointerLabel();
+    elements.mapCoordinateLabel.textContent = formatMapCoordinateLabel();
   }
 
   function renderToolMode() {
@@ -1336,9 +1338,25 @@
     }
     const x = state.hoverPixel.x;
     const y = state.hoverPixel.y;
-    const worldX = state.originX + (x + 0.5) * state.resolution;
-    const worldY = state.originY + (state.height - y - 0.5) * state.resolution;
-    return `pixel (${x}, ${y}), world (${formatNumber(worldX)}, ${formatNumber(worldY)})`;
+    const mapPoint = pixelToMapCoordinate(state.hoverPixel);
+    const worldX = state.originX + (mapPoint.x + 0.5) * state.resolution;
+    const worldY = state.originY + (mapPoint.y + 0.5) * state.resolution;
+    return `map (${mapPoint.x}, ${mapPoint.y}), image pixel (${x}, ${y}), world (${formatNumber(worldX)}, ${formatNumber(worldY)})`;
+  }
+
+  function formatMapCoordinateLabel() {
+    if (!state.hoverPixel) {
+      return "x: -, y: -";
+    }
+    const point = pixelToMapCoordinate(state.hoverPixel);
+    return `x: ${point.x}, y: ${point.y}`;
+  }
+
+  function pixelToMapCoordinate(pixel) {
+    return {
+      x: pixel.x,
+      y: state.height - pixel.y - 1,
+    };
   }
 
   function currentRegion() {
